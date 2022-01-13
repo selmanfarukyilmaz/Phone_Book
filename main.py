@@ -12,3 +12,16 @@ if __name__ == '__main__':
     phone_book.head = r1_node
     r1_node.next = r2_node
     r2_node.next = r3_node
+
+
+    def printList():
+        temp = phone_book.head
+        while temp:
+            print(f"name: {temp.data.name} ---> number: {temp.data.number}")
+            temp = temp.next
+
+
+    printList()
+
+
+
