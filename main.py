@@ -39,3 +39,25 @@ if __name__ == '__main__':
         new_node = Node(data=r_new)
         new_node.next = phone_book.head
         phone_book.head = new_node
+
+
+    def remove(name):
+        temp = phone_book.head
+
+        if temp.data.name == name:
+            phone_book.head = temp.next
+            temp = None
+            return
+
+        while temp:
+            if temp.data.name == name:
+                before.next = temp.next
+                temp = None
+                break
+            before = temp
+            temp = temp.next
+
+        if temp is None:
+            return
+
+
