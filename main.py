@@ -21,7 +21,21 @@ if __name__ == '__main__':
             temp = temp.next
 
 
-    printList()
+    def add(name, number):
+        phone_book_dic = {}
+        temp = phone_book.head
+        while temp:
+            phone_book_dic[temp.data.name] = temp.data.number
+            temp = temp.next
 
+        if name in phone_book_dic.keys():
+            print(f"The name {name} is already in the phone book.\nPlease try again.")
+            return
+        elif number in phone_book_dic.values():
+            print(f"The number {number} is already in the phone book.\nPlease try again.")
+            return
 
-
+        r_new = Record(name, number)
+        new_node = Node(data=r_new)
+        new_node.next = phone_book.head
+        phone_book.head = new_node
