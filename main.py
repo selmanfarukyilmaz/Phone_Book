@@ -24,6 +24,14 @@ def remove_record(linked_list: LinkedList, name: str):
         print("not found")
 
 
+def search_prefix(linked_list: LinkedList, prefix: str):
+    temp = linked_list.head
+    while temp:
+        if temp.data.name.startswith(prefix):
+            print(temp.data)
+        temp = temp.next
+
+
 if __name__ == '__main__':
     r1 = Record(name="selman", number="541")
     r2 = Record(name="mustafa", number="542")
@@ -39,7 +47,8 @@ if __name__ == '__main__':
     remove_record(linked_list=phone_book, name="mustafa")
     remove_record(linked_list=phone_book, name="kadir")
     remove_record(linked_list=phone_book, name="selman")
-
+    remove_record(linked_list=phone_book, name="unknown")
+    search_prefix(linked_list=phone_book, prefix="fa")
 
 
     def update(name, new_name, new_number):
@@ -53,13 +62,3 @@ if __name__ == '__main__':
 
         if temp is None:
             return
-
-
-    def search(name):
-        temp = phone_book.head
-        len_search = len(name)
-        while temp:
-            if temp.data.name[:len_search] == name:
-                print(f"Name: {temp.data.name} --> Number: {temp.data.number}")
-            temp = temp.next
-
