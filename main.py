@@ -61,3 +61,14 @@ if __name__ == '__main__':
             return
 
 
+    def update(name,new_name,new_number):
+        temp = phone_book.head
+        while temp:
+            if temp.data.name == name:
+                temp.data.number = new_number
+                temp.data.name = new_name
+                break
+            temp = temp.next
+
+        if temp is None:
+            return
