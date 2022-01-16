@@ -8,6 +8,22 @@ def add_record(linked_list: LinkedList, name: str, number: str):
     linked_list.add(new_node)
 
 
+def remove_record(linked_list: LinkedList, name: str):
+    if linked_list.head.data.name == name:
+        linked_list.head = linked_list.head.next
+        return
+
+    prev = phone_book.head
+    # find the previous node
+    while prev.next and prev.next.data.name != name:
+        prev = prev.next
+
+    if prev.next:
+        prev.next = prev.next.next
+    else:
+        print("not found")
+
+
 if __name__ == '__main__':
     r1 = Record(name="selman", number="541")
     r2 = Record(name="mustafa", number="542")
@@ -20,29 +36,13 @@ if __name__ == '__main__':
     add_record(linked_list=phone_book, name="fatih", number="543")
     add_record(linked_list=phone_book, name="kadir", number="544")
     phone_book.show()
+    remove_record(linked_list=phone_book, name="mustafa")
+    remove_record(linked_list=phone_book, name="kadir")
+    remove_record(linked_list=phone_book, name="selman")
 
 
-    def remove(name):
-        temp = phone_book.head
 
-        if temp.data.name == name:
-            phone_book.head = temp.next
-            temp = None
-            return
-
-        while temp:
-            if temp.data.name == name:
-                before.next = temp.next
-                temp = None
-                break
-            before = temp
-            temp = temp.next
-
-        if temp is None:
-            return
-
-
-    def update(name,new_name,new_number):
+    def update(name, new_name, new_number):
         temp = phone_book.head
         while temp:
             if temp.data.name == name:
