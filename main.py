@@ -73,3 +73,12 @@ if __name__ == '__main__':
         if temp is None:
             return
 
+
+    def search(name):
+        temp = phone_book.head
+        len_search = len(name)
+        while temp:
+            if temp.data.name[:len_search] == name:
+                print(f"Name: {temp.data.name} --> Number: {temp.data.number}")
+            temp = temp.next
+
