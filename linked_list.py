@@ -23,7 +23,6 @@ class LinkedList:
             temp = temp.next
 
     def add(self, new_node: Node):
-        # for empty
         if not self.head:
             self.head = new_node
             return
