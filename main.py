@@ -9,7 +9,7 @@ def add_record():
 
     """
     print("Please enter the name of the person you want to add to the phone book: ")
-    name = str(input())
+    name = str(input()).title()
     print("Please enter the number of the person you want to add to the phone book: ")
     number = str(input())
     print(f"{name}: {number} successfully added to your phone book.")
@@ -25,7 +25,7 @@ def remove_record():
 
     """
     print("Please enter the name of the person you want to delete from the phone book: ")
-    name = str(input())
+    name = str(input()).title()
     if phone_book.head.data.name == name:
         phone_book.head = phone_book.head.next
         print(f"{name} has been successfully deleted from the phone book.")
@@ -40,7 +40,7 @@ def remove_record():
         prev.next = prev.next.next
         print(f"{name} has been successfully deleted from the phone book.")
     else:
-        print("not found")
+        print(f"{name} name not found in phone book")
 
 
 def search_prefix():
@@ -50,12 +50,16 @@ def search_prefix():
 
     """
     print("Enter the name you want to search in the phone book: ")
-    prefix = str(input())
+    prefix = str(input()).title()
     temp = phone_book.head
+    count = 0
     while temp:
         if temp.data.name.startswith(prefix):
+            count += 1
             print(temp.data)
         temp = temp.next
+    if count == 0:
+        print("No one with the name you are looking for was found in the phone book.")
 
 
 def update():
@@ -64,9 +68,18 @@ def update():
     """
     temp = phone_book.head
     print("Please enter the registered name whose information you want to update: ")
-    input_name = str(input())
+    input_name = str(input()).title()
+    check = 0
+    while temp:
+        if temp.data.name == input_name:
+            check += 1
+            break
+        temp = temp.next
+    if check == 0:
+        print(f"{input_name} name not found in phone book")
+        return
     print(f"Enter the new name of {input_name} you want to update: (Press enter for no change)")
-    input_new_name = str(input())
+    input_new_name = str(input()).title()
     print(f"Enter the new number of {input_name} you want to update: (Press enter for no change)")
     input_new_number = str(input())
 
@@ -83,7 +96,7 @@ def update():
             temp = temp.next
 
     if input_new_name == "" and input_new_number != "":
-        print(f"{input_new_name}'s number has been changed to {input_new_number}.")
+        print(f"{input_name}'s number has been changed to {input_new_number}.")
         while temp:
             if temp.data.name == input_name:
                 temp.data.number = input_new_number
@@ -91,7 +104,9 @@ def update():
             temp = temp.next
 
     if input_new_name != "" and input_new_number != "":
-        print(f"{input_name} name has been updated to {input_new_name} and The phone number has been updated to {input_new_number}.")
+        print(
+            f"{input_name} name has been updated to {input_new_name} and "
+            f"The phone number has been updated to {input_new_number}.")
         while temp:
             if temp.data.name == input_name:
                 temp.data.number = input_new_number
@@ -103,10 +118,9 @@ def update():
         return
 
 
-
 if __name__ == '__main__':
-    r1 = Record(name="selman", number="541")
-    r2 = Record(name="mustafa", number="542")
+    r1 = Record(name="Selman", number="541")
+    r2 = Record(name="Mustafa", number="542")
     r1_node = Node(data=r1)
     r2_node = Node(data=r2)
     phone_book = LinkedList()
@@ -114,7 +128,7 @@ if __name__ == '__main__':
     r1_node.next = r2_node
 
     while True:
-        print("Please enter the number next to the operation you want to do.")
+        print("Select the Action you want to use")
         print("1- View contacts in the phone book.\n2- Add a new contact to the phone book."
               "\n3- Delete a contact in the phone book.\n4- Update the information of a contact in the phone book."
               "\n5- Searching the phone book by name.\n6- Exit")
@@ -160,9 +174,6 @@ if __name__ == '__main__':
             if check == "2":
                 break
         if action == "6":
-                break
+            break
         else:
             print("Please press 1,2,3,4,5 or 6 according to the operation you want to do.")
-
-
-
