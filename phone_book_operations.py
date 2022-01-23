@@ -1,5 +1,6 @@
 from linked_list import LinkedList, Node
 from record import Record
+from termcolor import colored
 
 
 def add_record(linked_list: LinkedList):
@@ -10,9 +11,14 @@ def add_record(linked_list: LinkedList):
     """
     print("Please enter the name of the person you want to add to the phone book: ")
     name = str(input()).title()
-
+    if not name:
+        print("You did not enter a valid name")
+        return
     print("Please enter the number of the person you want to add to the phone book: ")
     number = str(input())
+    if not number:
+        print("You did not enter a valid number")
+        return
 
     print(f"{name}: {number} successfully added to your phone book.")
 
@@ -90,36 +96,63 @@ def update(linked_list: LinkedList):
     print(f"Enter the new number of {input_name} you want to update: (Press enter for no change)")
     input_new_number = str(input())
 
-    if input_new_name == "" and input_new_number == "":
-        print("No changes have been made.")
-        return
-
-    if input_new_name != "" and input_new_number == "":
-        print(f"{input_name} name was changed to {input_new_name}.")
-        while temp:
-            if temp.data.name == input_name:
-                temp.data.name = input_new_name
-                break
-            temp = temp.next
-
-    if input_new_name == "" and input_new_number != "":
-        print(f"{input_name}'s number has been changed to {input_new_number}.")
-        while temp:
-            if temp.data.name == input_name:
-                temp.data.number = input_new_number
-                break
-            temp = temp.next
-
-    if input_new_name != "" and input_new_number != "":
-        print(
-            f"{input_name} name has been updated to {input_new_name} and "
-            f"The phone number has been updated to {input_new_number}.")
-        while temp:
-            if temp.data.name == input_name:
-                temp.data.number = input_new_number
-                temp.data.name = input_new_name
-                break
-            temp = temp.next
+    if input_new_name:
+        temp.data.name = input_new_name
+    if input_new_number:
+        temp.data.number = input_new_number
+    print(f"{temp.data.name}: {temp.data.number}")
 
     if temp is None:
         return
+
+
+def interface(linked_list: LinkedList):
+    print(colored(">>>>>>>>Welcome to Phone Book<<<<<<<<", "yellow", attrs=['bold']))
+    while True:
+        print(colored("↓ Select the Action you want to use ↓", "green", attrs=['bold']))
+        print(colored("1- View contacts in the phone book.\n"
+                      "2- Add a new contact to the phone book.\n"
+                      "3- Delete a contact in the phone book.\n"
+                      "4- Update the information of a contact in the phone book.\n"
+                      "5- Searching the phone book by name.\n"
+                      "6- Exit", attrs=['bold']))
+
+        action = str(input())
+
+        if action == "1":
+            linked_list.show()
+            print("Press any key to continue")
+            input()
+            continue
+
+        if action == "2":
+            add_record(linked_list)
+            print("Press any key to continue")
+            input()
+            continue
+
+        if action == "3":
+            remove_record(linked_list)
+            print("Press any key to continue")
+            input()
+            continue
+
+        if action == "4":
+            update(linked_list)
+            print("Press any key to continue")
+            input()
+            continue
+
+        if action == "5":
+            search_prefix(linked_list)
+            print("Press any key to continue")
+            input()
+            continue
+
+        if action == "6":
+            break
+
+        else:
+            print("Please press 1,2,3,4,5 or 6 according to the operation you want to do.")
+            print("Press any key to continue")
+            input()
