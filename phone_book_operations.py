@@ -1,6 +1,7 @@
 from linked_list import LinkedList, Node
 from record import Record
 from termcolor import colored
+import os.path
 
 
 def add_record(linked_list: LinkedList):
@@ -107,6 +108,25 @@ def update(linked_list: LinkedList):
 
 
 def interface(linked_list: LinkedList):
+    if os.path.isfile("phonebook.txt"):
+        text_file = open("phonebook.txt", "r")
+        data = text_file.read()
+        text_file.close()
+        data = data.split("*+-")
+
+        name_temp = []
+        number_temp = []
+        for i, datas in enumerate(data):
+            if i % 2 == 0:
+                name_temp.append(datas)
+            else:
+                number_temp.append(datas)
+
+        for name, number in zip(name_temp, number_temp):
+            new_record = Record(name=name, number=number)
+            new_node = Node(data=new_record)
+            linked_list.add(new_node)
+
     print(colored(">>>>>>>>Welcome to Phone Book<<<<<<<<", "yellow", attrs=['bold']))
     while True:
         print(colored("↓ Select the Action you want to use ↓", "green", attrs=['bold']))
@@ -150,6 +170,16 @@ def interface(linked_list: LinkedList):
             continue
 
         if action == "6":
+            temp = linked_list.head
+            f = open("phonebook.txt", "w")
+            while temp:
+                name_str = str(temp.data.name + "*+-")
+                f.write(name_str)
+                number_str = str(temp.data.number + "*+-")
+                f.write(number_str)
+                temp = temp.next
+
+            f.close()
             break
 
         else:
