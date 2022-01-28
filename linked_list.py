@@ -1,17 +1,24 @@
 from typing import Optional
 
 
-class Node:
+class DoublyNode:
 
     def __init__(self, data):
         self.data = data
         self.next = None
+        self.prev = None
+
+    def __str__(self) -> str:
+        return f"{self.data}"
 
 
-class LinkedList:
+class DoublyLinkedList:
 
     def __init__(self):
-        self.head: Optional[Node] = None
+        self.head: Optional[DoublyNode] = None
+
+    def __str__(self) -> str:
+        return f"{self.head}"
 
     def show(self):
         """
@@ -22,7 +29,7 @@ class LinkedList:
             print(temp.data)
             temp = temp.next
 
-    def add(self, new_node: Node):
+    def add(self, new_node: DoublyNode):
         if not self.head:
             self.head = new_node
             return
@@ -33,3 +40,4 @@ class LinkedList:
             last = last.next
         # insert
         last.next = new_node
+        new_node.prev = last
