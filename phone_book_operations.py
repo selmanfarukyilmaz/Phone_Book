@@ -93,31 +93,40 @@ def remove_number(linked_list: DoublyLinkedList):
         return
 
     previous = temp.data.numbers
-
-    # print(previous)
-    # print(type(previous))
-    # print(previous.head)
-    # print(previous.head.next)
     temp = temp.data.numbers.head
+
+    # Error prevention if Number = None.
+    try:
+        if previous.head.data:
+            pass
+    except:
+        print("There is no number to delete.")
+        return
+
+    # print numbers and number types
     while temp:
-        print(temp.data.number)
+        print(f"{temp.data.number_type}: {temp.data.number}")
         temp = temp.next
 
     number = input(str("Enter the number you want to delete: "))
     # find the previous node
+
+    # if head == number solution
     if previous.head.data.number == number:
         previous.head = previous.head.next
-        print(30)
         return
+
+    # if head.next == number solution
     previous = previous.head
-    while previous:
-        print(40)
+    while previous.next:
         if previous.next.data.number == number:
             previous.next = previous.next.next
             return
         previous = previous.next
+
     else:
-        print("error")
+        print("There is no number to delete.")
+
 
 phone_book = DoublyLinkedList()
 phone_book.show()
