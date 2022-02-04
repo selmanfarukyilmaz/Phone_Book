@@ -69,13 +69,15 @@ def remove_record(linked_list: DoublyLinkedList):
     # find the previous node
     while previous.next and previous.next.data.name != name:
         previous = previous.next
-
-    if previous.next:
-        previous.next = previous.next.next
-        previous.next.prev = previous
-        print(f"{name} has been successfully deleted from the phone book.")
-    else:
-        print(f"{name} name not found in phone book")
+    try:
+        if previous.next:
+            previous.next = previous.next.next
+            previous.next.prev = previous
+            print(f"{name} has been successfully deleted from the phone book.")
+        else:
+            print(f"{name} name not found in phone book")
+    except:
+        pass
 
 
 def remove_number(linked_list: DoublyLinkedList):
@@ -147,11 +149,8 @@ def update_person(linked_list: DoublyLinkedList):
 
     input_new_name = str(input(f"Enter the new name of {input_name} you want to update: "))
 
-    # input_new_number = str(
-    #     input(f"Enter the new number of {input_name} you want to update: (Press enter for no change)"))
-
     temp.data.name = input_new_name
-    # temp.data.number = input_new_number or temp.data.number
+
     print(f"{temp.data.name} Updated !")
 
 
@@ -233,109 +232,134 @@ def list(linked_list: DoublyLinkedList):
         temp = temp.next
 
 
-phone_book = DoublyLinkedList()
-list(phone_book)
-search_prefix(phone_book)
-phone_book.show()
-update_number(phone_book)
-update_person(phone_book)
-remove_number(phone_book)
+def load_records(linked_list: DoublyLinkedList):
+    global delimiter_line
+    global delimiter_word
+    global txt_name
+    global delimiter_number
 
-remove_record(phone_book)
-add_name(phone_book)
-add_number(phone_book)
+    txt_name = "phonebook.txt"
+    delimiter_line = "\n"
+    delimiter_word = ","
+    delimiter_number = "."
+    delimiter_record = "-"
 
-# def reset(linked_list: DoublyLinkedList):
-#     """
-#     It deletes all data and creates a new phone book.
-#     """
-#     variable = input("This operation will delete all record information in the phone book. Press \"1\" to perform the "
-#                      "reset.\nPress any key to cancel")
-#     if variable == 1:
-#         phone_book.head = None
+    if os.path.isfile(txt_name):
+        with open(file=txt_name, mode="r") as file:
+            records = file.read()
+            records = records.split(delimiter_line)
+            for r in records[1:]:
+                try:
+                    name, numbers = r.split(delimiter_word)
+                    new_record = Person(name=name, numbers=DoublyLinkedList())
+                    new_node = DoublyNode(data=new_record)
+                except:
+                    pass
+
+                numbers = numbers[:-1]
+                for n in numbers.split(delimiter_record):
+                    try:
+                        number, number_type = n.split(delimiter_number)
+                        new_record = PhoneRecord(number=number, number_type=number_type)
+                        new_node2 = DoublyNode(data=new_record)
+                        new_node.data.numbers.add(new_node2)
+                    except:
+                        pass
+
+                linked_list.add(new_node)
+
+
 #
+def save(linked_list: DoublyLinkedList):
+    delimiter_line = "\n"
+    delimiter_word = ","
+    delimiter_number = "."
+    delimiter_record = "-"
+    temp = linked_list.head
+    with open(file="phonebook.txt", mode="w") as file:
+        while temp:
+            file.write(f"{delimiter_line}{temp.data.name}{delimiter_word}")
+            try:
+                temp2 = temp.data.numbers.head
+                while temp2:
+                    file.write(f"{temp2.data.number}{delimiter_number}{temp2.data.number_type}{delimiter_record}")
+                    temp2 = temp2.next
+
+                temp = temp.next
+            except:
+                pass
+
+
 #
-# def load_records(linked_list: DoublyLinkedList):
-#     global delimiter_line
-#     global delimiter_word
-#     global txt_name
-#     txt_name = "phonebook.txt"
-#     delimiter_line = "\n"
-#     delimiter_word = ","
-#
-#     if os.path.isfile(txt_name):
-#         with open(file=txt_name, mode="r") as file:
-#             records = file.read()
-#             records = records.split(delimiter_line)
-#             for r in records[:-1]:
-#                 name, numbers = r.split(delimiter_word)
-#                 new_record = Person(name=name, numbers=numbers)
-#                 new_node = DoublyNode(data=new_record)
-#                 linked_list.add(new_node)
-#
-#
-# def save(linked_list: DoublyLinkedList):
-#     temp = linked_list.head
-#     with open(file=txt_name, mode="w") as file:
-#         while temp:
-#             file.write(f"{temp.data.name}{delimiter_word}{temp.data.numbers}{delimiter_line}")
-#             temp = temp.next
-# reset(phone_book)
 # save(phone_book)
 # load_records(phone_book)
 # list(phone_book)
-# def menu():
-#     print(colored("↓ Select the Action you want to use ↓", "green", attrs=['bold']))
-#     print(colored("1- View contacts in the phone book.\n"
-#                   "2- Add a new contact to the phone book.\n"
-#                   "3- Delete a contact in the phone book.\n"
-#                   "4- Update the information of a contact in the phone book.\n"
-#                   "5- Searching the phone book by name.\n"
-#                   "6- Reset phone book.\n"
-#                   "7- Exit", attrs=['bold']))
+
+
+def menu():
+    print(colored("↓ Select the Action you want to use ↓", "green", attrs=['bold']))
+    print(colored("1- View contacts in the phone book.\n"
+                  "2- Add a new contact to the phone book.\n"
+                  "3- Add number to contact\n"
+                  "4- Delete a contact in the phone book.\n"
+                  "5- Delete a contact's number\n"
+                  "6- Update the name of a contact in the phone book.\n"
+                  "7- Update the number of a contact in the phone book.\n"
+                  "8- Searching the phone book by name.\n"
+                  "9- Exit", attrs=['bold']))
+
+
 #
+
+
 #
-# def help_me():
-#     print("Please press 1,2,3,4,5 or 6 according to the operation you want to do.")
-#     time.sleep(2)
-#     input("Press any key to continue")
-#
-#
-# def interface(linked_list: DoublyLinkedList):
-#     print(colored(">>>>>>>>Welcome to Phone Book<<<<<<<<", "yellow", attrs=['bold']))
-#
-#     load_records(linked_list)
-#     action = 0
-#     while action != "7":
-#
-#         menu()
-#         action = str(input())
-#
-#         if action == "1":
-#             linked_list.show()
-#             input("Press any key to continue")
-#
-#         elif action == "2":
-#             add_record(linked_list)
-#             input("Press any key to continue")
-#
-#         elif action == "3":
-#             remove_record(linked_list)
-#             input("Press any key to continue")
-#
-#         elif action == "4":
-#             update(linked_list)
-#             input("Press any key to continue")
-#
-#         elif action == "5":
-#             search_prefix(linked_list)
-#             input("Press any key to continue")
-#
-#         elif action == "6":
-#             reset(linked_list)
-#
-#         elif action == "7":
-#             save(linked_list)
-#
-#         else:
-#             help_me()
+def help_me():
+    print("Please press 1,2,3,4,5 or 6 according to the operation you want to do.")
+    time.sleep(2)
+    input("Press any key to continue")
+
+
+def interface(linked_list: DoublyLinkedList):
+    print(colored(">>>>>>>>Welcome to Phone Book<<<<<<<<", "yellow", attrs=['bold']))
+
+    load_records(linked_list)
+
+    while True:
+
+        menu()
+        action = str(input())
+
+        if action == "1":
+            list(linked_list)
+            input("Press any key to continue")
+
+        elif action == "2":
+            add_name(linked_list)
+            input("Press any key to continue")
+
+        elif action == "3":
+            add_number(linked_list)
+            input("Press any key to continue")
+
+        elif action == "4":
+            remove_record(linked_list)
+            input("Press any key to continue")
+
+        elif action == "5":
+            remove_number(linked_list)
+            input("Press any key to continue")
+
+        elif action == "6":
+            update_person(linked_list)
+            input("Press any key to continue")
+        elif action == "7":
+            update_number(linked_list)
+            input("Press any key to continue")
+        elif action == "8":
+            search_prefix(linked_list)
+            input("Press any key to continue")
+        elif action == "9":
+            save(linked_list)
+            return
+        else:
+            help_me()
