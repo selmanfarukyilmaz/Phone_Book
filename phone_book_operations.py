@@ -5,8 +5,14 @@ from termcolor import colored
 from linked_list import DoublyLinkedList, DoublyNode
 from record import Person, PhoneRecord
 
+TXT_NAME = "phonebook.txt"
+delimiter_line = "\n"
+delimiter_word = ","
+delimiter_number = "."
+delimiter_record = "-"
 
-def add_name(linked_list: DoublyLinkedList):
+
+def add_person(linked_list: DoublyLinkedList):
     """
     Allows adding a new user to the phone book.
     The name and number information of the person to be added to the phone book is obtained from the user.
@@ -52,12 +58,20 @@ def add_number(linked_list: DoublyLinkedList):
     temp.data.numbers.add(new_node)
 
 
-def remove_record(linked_list: DoublyLinkedList):
+def remove_person(linked_list: DoublyLinkedList):
     """
     Deletes the user registered in the phone book.
     It asks the user for the name of the user registered in the phone book and then deletes it.
 
     """
+    # Error prevention if Number = None.
+    try:
+        if linked_list.head.data:
+            pass
+    except:
+        print("There is no number to delete.")
+        return
+
     name = str(input("Please enter the name of the person you want to delete from the phone book: "))
 
     if linked_list.head.data.name == name:
@@ -65,19 +79,18 @@ def remove_record(linked_list: DoublyLinkedList):
         print(f"{name} has been successfully deleted from the phone book.")
         return
 
-    previous = linked_list.head
-    # find the previous node
-    while previous.next and previous.next.data.name != name:
-        previous = previous.next
-    try:
-        if previous.next:
-            previous.next = previous.next.next
-            previous.next.prev = previous
-            print(f"{name} has been successfully deleted from the phone book.")
-        else:
-            print(f"{name} name not found in phone book")
-    except:
-        pass
+    curr = linked_list.head
+    # find the curr node
+    while curr.next and curr.next.data.name != name:
+        curr = curr.next
+    # try:
+    if curr.next:
+        curr.next = curr.next.next
+        print(f"{name} has been successfully deleted from the phone book.")
+        return
+
+    else:
+        print(f"{name} name not found in phone book")
 
 
 def remove_number(linked_list: DoublyLinkedList):
@@ -136,14 +149,14 @@ def update_person(linked_list: DoublyLinkedList):
      """
     temp = linked_list.head
     input_name = str(input("Please enter the registered name whose information you want to update: "))
-    check = False
+    variable = False
     while temp:
         if temp.data.name == input_name:
-            check = True
+            variable = True
             break
         temp = temp.next
 
-    if check is not True:
+    if variable is not True:
         print(f"{input_name} name not found in phone book")
         return
 
@@ -160,18 +173,18 @@ def update_number(linked_list: DoublyLinkedList):
      """
     temp = linked_list.head
     input_name = str(input("Please enter the registered name whose information you want to update: "))
-    check = False
+    variable = False
     while temp:
         if temp.data.name == input_name:
-            check = True
+            variable = True
             break
         temp = temp.next
 
-    if check is not True:
+    if variable is not True:
         print(f"{input_name} name not found in phone book")
         return
 
-    temp2 = temp.data.numbers.head
+    curr = temp.data.numbers.head
     temp = temp.data.numbers.head
 
     while temp:
@@ -181,11 +194,11 @@ def update_number(linked_list: DoublyLinkedList):
     number = str(input("Enter the number you want to update: "))
     new_number = str(input("Enter the new number: "))
 
-    while temp2:
-        if temp2.data.number == number:
-            temp2.data.number = new_number
+    while curr:
+        if curr.data.number == number:
+            curr.data.number = new_number
             return
-        temp2 = temp2.next
+        curr = curr.next
     else:
         print(f"The {number} you entered is not in the records of {input_name}.")
 
@@ -198,34 +211,34 @@ def search_prefix(linked_list: DoublyLinkedList):
     """
     prefix = str(input("Enter the name you want to search in the phone book: "))
     temp = linked_list.head
-    count = 0
+    variable = False
     while temp:
         if temp.data.name.startswith(prefix):
-            count += 1
+            variable = True
             print(temp.data.name)
-            temp2 = temp.data.numbers.head
+            curr = temp.data.numbers.head
             try:
-                while temp2.data.number:
-                    print(f"{temp2.data.number} --> {temp2.data.number_type}")
-                    temp2 = temp2.next
+                while curr.data.number:
+                    print(f"{curr.data.number} --> {curr.data.number_type}")
+                    curr = curr.next
             except:
                 pass
 
         temp = temp.next
-    if count == 0:
+    if not variable:
         print("No one with the name you are looking for was found in the phone book.")
 
 
-def list(linked_list: DoublyLinkedList):
+def show(linked_list: DoublyLinkedList):
     temp = linked_list.head
     while temp:
         if temp.data.name:
             print(temp.data.name)
             try:
-                temp2 = temp.data.numbers.head
-                while temp2.data.number:
-                    print(f"{temp2.data.number} --> {temp2.data.number_type}")
-                    temp2 = temp2.next
+                curr = temp.data.numbers.head
+                while curr.data.number:
+                    print(f"{curr.data.number} --> {curr.data.number_type}")
+                    curr = curr.next
             except:
                 pass
 
@@ -233,67 +246,38 @@ def list(linked_list: DoublyLinkedList):
 
 
 def load_records(linked_list: DoublyLinkedList):
-    global delimiter_line
-    global delimiter_word
-    global txt_name
-    global delimiter_number
-
-    txt_name = "phonebook.txt"
-    delimiter_line = "\n"
-    delimiter_word = ","
-    delimiter_number = "."
-    delimiter_record = "-"
-
-    if os.path.isfile(txt_name):
-        with open(file=txt_name, mode="r") as file:
+    if os.path.isfile(TXT_NAME):
+        with open(file=TXT_NAME, mode="r") as file:
             records = file.read()
             records = records.split(delimiter_line)
             for r in records[1:]:
-                try:
-                    name, numbers = r.split(delimiter_word)
-                    new_record = Person(name=name, numbers=DoublyLinkedList())
-                    new_node = DoublyNode(data=new_record)
-                except:
-                    pass
+                name, numbers = r.split(delimiter_word)
+                new_record = Person(name=name, numbers=DoublyLinkedList())
+                new_node = DoublyNode(data=new_record)
 
-                numbers = numbers[:-1]
-                for n in numbers.split(delimiter_record):
-                    try:
+                if numbers:
+                    numbers = numbers[:-1]
+                    for n in numbers.split(delimiter_record):
                         number, number_type = n.split(delimiter_number)
                         new_record = PhoneRecord(number=number, number_type=number_type)
-                        new_node2 = DoublyNode(data=new_record)
-                        new_node.data.numbers.add(new_node2)
-                    except:
-                        pass
+                        new_node_number = DoublyNode(data=new_record)
+                        new_node.data.numbers.add(new_node_number)
 
                 linked_list.add(new_node)
 
 
-#
 def save(linked_list: DoublyLinkedList):
-    delimiter_line = "\n"
-    delimiter_word = ","
-    delimiter_number = "."
-    delimiter_record = "-"
     temp = linked_list.head
     with open(file="phonebook.txt", mode="w") as file:
         while temp:
             file.write(f"{delimiter_line}{temp.data.name}{delimiter_word}")
-            try:
-                temp2 = temp.data.numbers.head
-                while temp2:
-                    file.write(f"{temp2.data.number}{delimiter_number}{temp2.data.number_type}{delimiter_record}")
-                    temp2 = temp2.next
 
-                temp = temp.next
-            except:
-                pass
+            curr = temp.data.numbers.head
+            while curr:
+                file.write(f"{curr.data.number}{delimiter_number}{curr.data.number_type}{delimiter_record}")
+                curr = curr.next
 
-
-#
-# save(phone_book)
-# load_records(phone_book)
-# list(phone_book)
+            temp = temp.next
 
 
 def menu():
@@ -309,10 +293,6 @@ def menu():
                   "9- Exit", attrs=['bold']))
 
 
-#
-
-
-#
 def help_me():
     print("Please press 1,2,3,4,5 or 6 according to the operation you want to do.")
     time.sleep(2)
@@ -330,11 +310,11 @@ def interface(linked_list: DoublyLinkedList):
         action = str(input())
 
         if action == "1":
-            list(linked_list)
+            show(linked_list)
             input("Press any key to continue")
 
         elif action == "2":
-            add_name(linked_list)
+            add_person(linked_list)
             input("Press any key to continue")
 
         elif action == "3":
@@ -342,7 +322,7 @@ def interface(linked_list: DoublyLinkedList):
             input("Press any key to continue")
 
         elif action == "4":
-            remove_record(linked_list)
+            remove_person(linked_list)
             input("Press any key to continue")
 
         elif action == "5":
