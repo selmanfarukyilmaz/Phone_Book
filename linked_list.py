@@ -20,14 +20,6 @@ class DoublyLinkedList:
     def __str__(self) -> str:
         return f"{self.head}"
 
-    def show(self):
-        """
-        Print nodes of the linked list to the screen
-        """
-        temp = self.head
-        while temp:
-            print(temp.data)
-            temp = temp.next
 
     def add(self, new_node: DoublyNode):
         if not self.head:
