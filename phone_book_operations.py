@@ -7,9 +7,20 @@ from record import Person, PhoneRecord
 
 TXT_NAME = "phonebook.txt"
 delimiter_line = "\n"
-delimiter_word = ","
+delimiter_word = "["
 delimiter_number = "."
-delimiter_record = "-"
+delimiter_record = "]"
+
+
+def name_search(linked_list: DoublyLinkedList, name):
+    temp = linked_list.head
+    while temp:
+        if temp.data.name == name:
+            return temp
+        temp = temp.next
+
+    print("The name you entered was not found in the phone book")
+    return
 
 
 def add_person(linked_list: DoublyLinkedList):
@@ -32,16 +43,8 @@ def add_person(linked_list: DoublyLinkedList):
 
 def add_number(linked_list: DoublyLinkedList):
     name = str(input("Please enter the name you want to enter the number and phone type."))
-    temp = linked_list.head
-    valid_check = False
-    while temp:
-        if temp.data.name == name:
-            valid_check = True
-            break
-        temp = temp.next
-
-    if not valid_check:
-        print("The name you entered was not found in the phone book")
+    temp = name_search(linked_list, name)
+    if not temp:
         return
 
     number = str(input(f"Please enter the number you want to add to {name}."))
@@ -52,7 +55,6 @@ def add_number(linked_list: DoublyLinkedList):
     if not number_type:
         print("You did not enter a valid number type.")
         return
-
     new_record = PhoneRecord(number=number, number_type=number_type)
     new_node = DoublyNode(data=new_record)
     temp.data.numbers.add(new_node)
@@ -95,16 +97,8 @@ def remove_person(linked_list: DoublyLinkedList):
 
 def remove_number(linked_list: DoublyLinkedList):
     name = str(input("Please Enter the name whose number you want to delete: "))
-    temp = linked_list.head
-    valid_check = False
-    while temp:
-        if temp.data.name == name:
-            valid_check = True
-            break
-        temp = temp.next
-
-    if not valid_check:
-        print("The name you entered was not found in the phone book")
+    temp = name_search(linked_list, name)
+    if not temp:
         return
 
     previous = temp.data.numbers
@@ -147,20 +141,13 @@ def update_person(linked_list: DoublyLinkedList):
     """
      Updates the name of a contact in the phone book.
      """
-    temp = linked_list.head
-    input_name = str(input("Please enter the registered name whose information you want to update: "))
-    variable = False
-    while temp:
-        if temp.data.name == input_name:
-            variable = True
-            break
-        temp = temp.next
-
-    if variable is not True:
-        print(f"{input_name} name not found in phone book")
+    # temp = linked_list.head
+    name = str(input("Please enter the registered name whose information you want to update: "))
+    temp = name_search(linked_list, name)
+    if not temp:
         return
 
-    input_new_name = str(input(f"Enter the new name of {input_name} you want to update: "))
+    input_new_name = str(input(f"Enter the new name of {name} you want to update: "))
 
     temp.data.name = input_new_name
 
@@ -171,17 +158,10 @@ def update_number(linked_list: DoublyLinkedList):
     """
      Updates the name of a contact in the phone book.
      """
-    temp = linked_list.head
-    input_name = str(input("Please enter the registered name whose information you want to update: "))
-    variable = False
-    while temp:
-        if temp.data.name == input_name:
-            variable = True
-            break
-        temp = temp.next
-
-    if variable is not True:
-        print(f"{input_name} name not found in phone book")
+    # temp = linked_list.head
+    name = str(input("Please enter the registered name whose information you want to update: "))
+    temp = name_search(linked_list, name)
+    if not temp:
         return
 
     curr = temp.data.numbers.head
@@ -200,7 +180,7 @@ def update_number(linked_list: DoublyLinkedList):
             return
         curr = curr.next
     else:
-        print(f"The {number} you entered is not in the records of {input_name}.")
+        print(f"The {number} you entered is not in the records of {name}.")
 
 
 def search_prefix(linked_list: DoublyLinkedList):
