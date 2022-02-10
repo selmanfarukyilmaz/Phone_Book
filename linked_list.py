@@ -5,8 +5,8 @@ class DoublyNode:
 
     def __init__(self, data):
         self.data = data
-        self.next = None
-        self.prev = None
+        self.next: Optional[DoublyNode] = None
+        self.prev: Optional[DoublyNode] = None
 
     def __str__(self) -> str:
         return f"{self.data}"
