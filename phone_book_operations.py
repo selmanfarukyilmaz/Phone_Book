@@ -1,3 +1,4 @@
+import configparser
 import os.path
 import time
 from termcolor import colored
@@ -5,11 +6,14 @@ from termcolor import colored
 from linked_list import DoublyLinkedList, DoublyNode
 from record import Person, PhoneRecord
 
-TXT_NAME = "phonebook.txt"
-delimiter_line = "\n"
-delimiter_word = "["
-delimiter_number = "."
-delimiter_record = "]"
+
+CONFIG = configparser.ConfigParser()
+CONFIG.read("config.ini")
+PHONEBOOK_FILE_NAME = CONFIG["DEFAULT"]["phonebook_file_name"]
+DELIMITER_LINE = "\n"
+DELIMITER_WORD = CONFIG["DEFAULT"]["delimiter_word"]
+DELIMITER_NUMBER = CONFIG["DEFAULT"]["delimiter_number"]
+DELIMITER_RECORD = CONFIG["DEFAULT"]["delimiter_record"]
 
 
 def name_search(linked_list: DoublyLinkedList, name):
@@ -226,19 +230,19 @@ def show(linked_list: DoublyLinkedList):
 
 
 def load_records(linked_list: DoublyLinkedList):
-    if os.path.isfile(TXT_NAME):
-        with open(file=TXT_NAME, mode="r") as file:
+    if os.path.isfile(PHONEBOOK_FILE_NAME):
+        with open(file=PHONEBOOK_FILE_NAME, mode="r") as file:
             records = file.read()
-            records = records.split(delimiter_line)
+            records = records.split(DELIMITER_LINE)
             for r in records[1:]:
-                name, numbers = r.split(delimiter_word)
+                name, numbers = r.split(DELIMITER_WORD)
                 new_record = Person(name=name, numbers=DoublyLinkedList())
                 new_node = DoublyNode(data=new_record)
 
                 if numbers:
                     numbers = numbers[:-1]
-                    for n in numbers.split(delimiter_record):
-                        number, number_type = n.split(delimiter_number)
+                    for n in numbers.split(DELIMITER_RECORD):
+                        number, number_type = n.split(DELIMITER_NUMBER)
                         new_record = PhoneRecord(number=number, number_type=number_type)
                         new_node_number = DoublyNode(data=new_record)
                         new_node.data.numbers.add(new_node_number)
@@ -250,11 +254,11 @@ def save(linked_list: DoublyLinkedList):
     temp = linked_list.head
     with open(file="phonebook.txt", mode="w") as file:
         while temp:
-            file.write(f"{delimiter_line}{temp.data.name}{delimiter_word}")
+            file.write(f"{DELIMITER_LINE}{temp.data.name}{DELIMITER_WORD}")
 
             curr = temp.data.numbers.head
             while curr:
-                file.write(f"{curr.data.number}{delimiter_number}{curr.data.number_type}{delimiter_record}")
+                file.write(f"{curr.data.number}{DELIMITER_NUMBER}{curr.data.number_type}{DELIMITER_RECORD}")
                 curr = curr.next
 
             temp = temp.next
