@@ -221,13 +221,13 @@ def show(linked_list: DoublyLinkedList):
     while temp:
         if temp.data.name:
             print(temp.data.name)
-            try:
-                curr = temp.data.numbers.head
-                while curr.data.number:
+
+            curr = temp.data.numbers.head
+            if curr:
+                while curr and curr.data.number:
                     print(curr)
                     curr = curr.next
-            except:
-                pass
+
 
         temp = temp.next
 
